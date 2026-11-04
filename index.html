@@ -30,13 +30,8 @@
     display: flex;
     font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
     color: var(--text);
-    background-color: var(--ink-deep);
-    background-image:
-      linear-gradient(rgba(67,205,252,.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(67,205,252,.07) 1px, transparent 1px),
-      radial-gradient(800px 520px at 50% 0%, rgba(50,161,242,.35) 0%, transparent 70%),
-      linear-gradient(180deg, #1e222b 0%, #0d1015 100%);
-    background-size: 44px 44px, 44px 44px, 100% 100%, 100% 100%;
+    background: #060a13;
+    overflow-x: hidden;
   }
   .card {
     position: relative;
@@ -179,6 +174,56 @@
   .deal-txt strong { font-size: 15px; color: var(--ink); font-weight: 700; }
   .card { box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 140px rgba(50,161,242,.28); }
 
+
+  /* ===== ФОН ===== */
+  .bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; }
+  .b1 { width: 620px; height: 620px; left: -160px; top: -200px; background: #1f6bff; animation: drift1 22s ease-in-out infinite alternate; }
+  .b2 { width: 560px; height: 560px; right: -140px; top: -120px; background: #14c8ff; opacity: .38; animation: drift2 26s ease-in-out infinite alternate; }
+  .b3 { width: 700px; height: 380px; left: 50%; bottom: -200px; margin-left: -350px; background: #2a5bff; opacity: .5; animation: drift1 30s ease-in-out infinite alternate-reverse; }
+  @keyframes drift1 { to { transform: translate(120px, 90px) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-110px, 110px) scale(1.1); } }
+  .stars {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1.5px 1.5px at 28% 64%, rgba(120,220,255,.7), transparent),
+      radial-gradient(1px 1px at 41% 12%, rgba(255,255,255,.6), transparent),
+      radial-gradient(1.5px 1.5px at 63% 31%, rgba(255,255,255,.6), transparent),
+      radial-gradient(1px 1px at 77% 71%, rgba(120,220,255,.7), transparent),
+      radial-gradient(1.5px 1.5px at 88% 18%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1px 1px at 93% 52%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 6% 80%, rgba(255,255,255,.5), transparent);
+    animation: twinkle 5s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: .45; } to { opacity: 1; } }
+  .floor-wrap {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 58%;
+    perspective: 420px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(0deg, #000 25%, transparent 100%);
+            mask-image: linear-gradient(0deg, #000 25%, transparent 100%);
+  }
+  .floor {
+    position: absolute; left: -60%; right: -60%; top: 0; bottom: -40%;
+    transform: rotateX(64deg); transform-origin: 50% 0;
+    background-image:
+      linear-gradient(rgba(67,205,252,.55) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(67,205,252,.55) 2px, transparent 2px);
+    background-size: 70px 70px;
+    animation: flow 3s linear infinite;
+  }
+  @keyframes flow { to { background-position: 0 70px; } }
+  .layout { position: relative; z-index: 1; }
+  .foot {
+    grid-column: 1 / -1;
+    margin: 0; max-width: none; text-align: center;
+    font-size: 14px; color: rgba(255,255,255,.7);
+  }
+  .foot b { color: var(--cyan); font-weight: 700; }
+  @media (min-width: 1101px) {
+    .foot { position: fixed; left: 0; right: 0; bottom: 14px; z-index: 1; }
+  }
+
   .layout {
     margin: auto;
     width: 100%;
@@ -203,16 +248,13 @@
   }
   .side h2::after {
     content: "";
-    position: absolute; bottom: 0;
-    width: 56px; height: 4px;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--blue), var(--cyan));
-    box-shadow: 0 0 14px rgba(67,205,252,.6);
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px; border-radius: 3px;
+    box-shadow: 0 0 16px rgba(67,205,252,.55);
   }
-  .side-l h2::after { right: 0; }
-  .side-r h2::after { left: 0; }
-  .side-l { text-align: right; }
-  .side-r { text-align: left; }
+  .side-l h2::after { background: linear-gradient(90deg, transparent, var(--blue) 45%, var(--cyan)); }
+  .side-r h2::after { background: linear-gradient(90deg, var(--cyan), var(--blue) 55%, transparent); }
+  .side { text-align: center; }
   .viewport {
     position: absolute; inset: 58px 0 0 0;
     overflow: hidden;
@@ -242,11 +284,12 @@
   .side-l .track li { font-size: 24px; }
 
   @media (max-width: 1100px) {
-    .layout { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+    .layout { display: flex; flex-direction: column; align-items: center; gap: 20px; }
     .layout .card { order: 1; }
-    .side { order: 2; width: 100%; max-width: 100%; min-height: 0; height: auto; text-align: left; }
-    .side h2 { position: static; text-align: center; padding-bottom: 12px; font-size: 18px; }
-    .side h2::after { left: 50% !important; right: auto !important; transform: translateX(-50%); width: 40px; height: 3px; }
+    .side { order: 2; width: 100%; max-width: 100%; min-height: 0; height: auto; }
+    .foot { order: 3; font-size: 13px; padding: 4px 8px 12px; }
+    .side h2 { position: relative; top: auto; left: auto; right: auto; padding-bottom: 14px; margin-bottom: 12px; font-size: 18px; }
+    .side h2::after, .side-l h2::after, .side-r h2::after { left: 50%; right: auto; width: 44px; transform: translateX(-50%); background: linear-gradient(90deg, var(--blue), var(--cyan)); }
     .viewport {
       position: relative; inset: auto; height: 46px;
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
@@ -299,12 +342,17 @@
     .mail { margin-top: 16px; font-size: 15px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .spark::after, .dot, .belt { animation: none; }
+    .spark::after, .dot, .belt, .blob, .stars, .floor { animation: none; }
     .spark::after { left: 31%; }
   }
 </style>
 </head>
 <body>
+  <div class="bg" aria-hidden="true">
+    <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
+    <div class="stars"></div>
+    <div class="floor-wrap"><div class="floor"></div></div>
+  </div>
   <div class="layout">
     <aside class="side side-l" aria-label="Розетки и выключатели">
       <h2>Розетки и выключатели</h2>
@@ -363,6 +411,8 @@
       <h2>Освещение</h2>
       <div class="viewport"><div class="belt"><ul class="track side-r"><li>Adilux</li><li>Alfa</li><li>Ambiente</li><li>Ambrella light</li><li>Apeyron</li><li>Aployt</li><li>Ardecoled</li><li>Arlight</li><li>Arte Lamp</li><li>Arte Milano</li><li>Arte Perfetto Luce</li><li>Arti Lampadari</li><li>Artpole</li><li>Belfast</li><li>Bogates</li><li>Bohemia Ivele</li><li>Camelion</li><li>Chiaro</li><li>Citilux</li><li>Covali</li><li>Crystal Lux</li><li>De City</li><li>De Markt</li><li>Deko-light</li><li>Eglo</li><li>Elektrostandard</li><li>Escada</li><li>Fametto</li><li>Favourite</li><li>Freya</li><li>Garda Decor</li><li>HiTT</li><li>Ideal Lux</li><li>iLamp</li><li>iLedex</li><li>Kanlux</li><li>Kink Light</li><li>LED Holding</li><li>Led4U</li><li>Lightstar</li><li>Loft IT</li><li>Lucia Tucci</li><li>Lucide</li><li>Lumina Deco</li><li>Luminex</li><li>Lumion</li><li>Lumker</li><li>Lussole</li><li>Mantra</li><li>Maytoni</li><li>Mizi'en</li><li>Novotech</li><li>Nowodvorski</li><li>Odeon Light</li><li>OGM</li><li>Omnilux</li><li>Rivoli</li><li>Romatti</li><li>Siled</li><li>Sneha</li><li>Sonex</li><li>ST Luce</li><li>Stilfort</li><li>SWG</li><li>TK Lighting</li><li>TopDecor</li><li>Ultraflash</li><li>Uniel</li><li>Velante</li><li>Vitaluce</li><li>Volpe</li><li>Voltalighting</li><li>Voltega</li><li>Wertmark</li><li>Zortes</li><li>ВСЕСВЕТОДИОДЫ</li><li>Наносвет</li></ul><ul class="track side-r dup" aria-hidden="true"><li>Adilux</li><li>Alfa</li><li>Ambiente</li><li>Ambrella light</li><li>Apeyron</li><li>Aployt</li><li>Ardecoled</li><li>Arlight</li><li>Arte Lamp</li><li>Arte Milano</li><li>Arte Perfetto Luce</li><li>Arti Lampadari</li><li>Artpole</li><li>Belfast</li><li>Bogates</li><li>Bohemia Ivele</li><li>Camelion</li><li>Chiaro</li><li>Citilux</li><li>Covali</li><li>Crystal Lux</li><li>De City</li><li>De Markt</li><li>Deko-light</li><li>Eglo</li><li>Elektrostandard</li><li>Escada</li><li>Fametto</li><li>Favourite</li><li>Freya</li><li>Garda Decor</li><li>HiTT</li><li>Ideal Lux</li><li>iLamp</li><li>iLedex</li><li>Kanlux</li><li>Kink Light</li><li>LED Holding</li><li>Led4U</li><li>Lightstar</li><li>Loft IT</li><li>Lucia Tucci</li><li>Lucide</li><li>Lumina Deco</li><li>Luminex</li><li>Lumion</li><li>Lumker</li><li>Lussole</li><li>Mantra</li><li>Maytoni</li><li>Mizi'en</li><li>Novotech</li><li>Nowodvorski</li><li>Odeon Light</li><li>OGM</li><li>Omnilux</li><li>Rivoli</li><li>Romatti</li><li>Siled</li><li>Sneha</li><li>Sonex</li><li>ST Luce</li><li>Stilfort</li><li>SWG</li><li>TK Lighting</li><li>TopDecor</li><li>Ultraflash</li><li>Uniel</li><li>Velante</li><li>Vitaluce</li><li>Volpe</li><li>Voltalighting</li><li>Voltega</li><li>Wertmark</li><li>Zortes</li><li>ВСЕСВЕТОДИОДЫ</li><li>Наносвет</li></ul></div></div>
     </aside>
+
+    <p class="foot">Не нашли нужный бренд? <b>Привезём под заказ</b> — просто напишите нам</p>
   </div>
 </body>
 </html>
